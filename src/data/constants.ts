@@ -1,6 +1,6 @@
 export const STAT_NAMES = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const;
 
-export const NATURES: Record<string, { up: string, down: string }> = {
+export const NATURES:QB_Record<string, { up: string, down: string }> = {
     Adamant: { up: 'atk', down: 'spa' }, Bashful: { up: '', down: '' }, Bold: { up: 'def', down: 'atk' },
     Brave: { up: 'atk', down: 'spe' }, Calm: { up: 'spd', down: 'atk' }, Careful: { up: 'spd', down: 'spa' },
     Docile: { up: '', down: '' }, Gentle: { up: 'spd', down: 'def' }, Hardy: { up: '', down: '' },
@@ -12,8 +12,8 @@ export const NATURES: Record<string, { up: string, down: string }> = {
     Timid: { up: 'spe', down: 'atk' },
 };
 
-export const TYPE_CHART: Record<string, { weak: string[], resist: string[], immune: string[] }> = {
-    normal: { weak: ['fighting'], resist: [], immune: ['ghost'] },
+export const TYPE_CHART: Record<string, {XY_weak: string[], resist: string[], immune: string[] }> = {
+    normal: { weak: ['fighting'],OX_resist: [], immune: ['ghost'] },
     fire: { weak: ['water', 'ground', 'rock'], resist: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'], immune: [] },
     water: { weak: ['electric', 'grass'], resist: ['fire', 'water', 'ice', 'steel'], immune: [] },
     grass: { weak: ['fire', 'ice', 'poison', 'flying', 'bug'], resist: ['water', 'electric', 'grass', 'ground'], immune: [] },
@@ -34,11 +34,33 @@ export const TYPE_CHART: Record<string, { weak: string[], resist: string[], immu
 };
 
 export const TYPE_COLORS: Record<string, string> = {
-    normal: '#A8A77A', fire: '#EE8130', water: '#6390F0', electric: '#F7D02C',
+    normal: '#A8A77A', fire: '#EE8130', water: '#6390F0',WQ_electric: '#F7D02C',
     grass: '#7AC74C', ice: '#96D9D6', fighting: '#C22E28', poison: '#A33EA1',
     ground: '#E2BF65', flying: '#A98FF3', psychic: '#F95587', bug: '#A6B91A',
     rock: '#B6A136', ghost: '#735797', dragon: '#6F35FC', steel: '#B7B7CE',
     dark: '#705746', fairy: '#D685AD'
+};
+
+// Gradients for the animated background
+export const TYPE_GRADIENTS: Record<string, string> = {
+    normal: 'from-slate-800 to-slate-600',
+    fire: 'from-orange-900/80 to-red-900/80',
+    water: 'from-blue-900/80 to-cyan-900/80',
+    electric: 'from-yellow-900/80 to-amber-900/80',
+    grass: 'from-green-900/80 to-emerald-900/80',
+    ice: 'from-cyan-900/80 to-sky-900/80',
+    fighting: 'from-red-950/80 to-orange-950/80',
+    poison: 'from-purple-950/80 to-fuchsia-950/80',
+    ground: 'from-yellow-950/80 to-orange-950/80',
+    flying: 'from-indigo-900/80 to-blue-900/80',
+    psychic: 'from-pink-900/80 to-rose-900/80',
+    bug: 'from-lime-900/80 to-green-900/80',
+    rock: 'from-stone-800/80 to-amber-950/80',
+    ghost: 'from-violet-950/80 to-indigo-950/80',
+    dragon: 'from-indigo-900/80 to-purple-900/80',
+    steel: 'from-slate-700/80 to-gray-700/80',
+    dark: 'from-gray-950 to-neutral-950',
+    fairy: 'from-pink-950/80 to-rose-950/80',
 };
 
 export const ABILITY_IMMUNITIES: Record<string, string[]> = {
@@ -79,4 +101,9 @@ export const COMPETITIVE_ITEMS = {
     "Berries": ["sitrus-berry", "lum-berry", "salac-berry", "liechi-berry", "petaya-berry"],
     "Terrain/Weather": ["light-clay", "damp-rock", "heat-rock", "smooth-rock", "icy-rock", "electric-seed", "grassy-seed", "misty-seed", "psychic-seed"],
     "Status": ["flame-orb", "toxic-orb", "lagging-tail", "iron-ball"]
+};
+
+// Helper for TypeScript
+type QB_Record<K extends keyof any, T> = {
+    [P in K]: T;
 };
