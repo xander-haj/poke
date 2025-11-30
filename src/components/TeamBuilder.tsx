@@ -20,8 +20,6 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
     const [loading, setLoading] = useState(false);
     const [showAnalysis, setShowAnalysis] = useState(false); 
 
-    // --- Actions ---
-
     const handleSearch = (query: string) => {
         setSearchQuery(query);
         if (query.length < 2) {
@@ -126,7 +124,6 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
         alert("Team exported to clipboard!");
     };
 
-    // --- Renders ---
     const member = team[selectedSlot];
     const evUsed = member.pokemon ? Object.values(member.evs).reduce((a, b) => a + b, 0) : 0;
 
@@ -140,10 +137,8 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
     }
 
     return (
-        // MAIN CONTAINER: Single 'Giant Scroll' viewport
         <div className="h-full overflow-y-auto bg-slate-950">
-            
-            {/* 1. TOP SECTION: Team Grid */}
+            {/* Top Team Grid */}
             <div className="p-4 md:p-6 bg-slate-950 border-b border-slate-800">
                 <div className="flex justify-between items-center mb-6">
                     <h2 className="text-2xl font-bold text-white">Active Team</h2>
@@ -183,7 +178,11 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                     </div>
                                     <div className="text-[10px] text-slate-400 mb-auto truncate">{capitalize(m.item) || 'No Item'}</div>
                                     <div className="flex gap-1 h-1.5 mt-2">
-                                        {m.moves.map((mv, k) => <div key={k} className="flex-1 rounded-full bg-slate-700/50 overflow-hidden" title={mv?.type}>{mv && <div className="h-full bg-cyan-500 shadow-[0_0_5px_cyan]"></div>}</div>)}
+                                        {m.moves.map((mv, k) => (
+                                            <div key={k} className="flex-1 rounded-full bg-slate-700/50 overflow-hidden" title={mv?.type}>
+                                                {mv && <div className="h-full bg-cyan-500 shadow-[0_0_5px_cyan]"></div>}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                                 <img src={m.pokemon.sprite} className="absolute bottom-1 right-1 w-16 h-16 object-contain drop-shadow-xl transform group-hover:scale-110 transition-transform duration-200" />
@@ -194,14 +193,14 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                 </div>
             </div>
 
-            {/* 2. MIDDLE SECTION: Analysis (No scrollbars, just expands page height) */}
+            {/* Analysis Panel */}
             {showAnalysis && (
                 <div className="bg-slate-900 border-b border-slate-800 shadow-inner">
                      <TeamAnalysis team={team} />
                 </div>
             )}
 
-            {/* 3. BOTTOM SECTION: Editor (Flows naturally below) */}
+            {/* Editor Section */}
             <div className="bg-slate-950 relative min-h-[500px]">
                 {!member.pokemon ? (
                     <div className="py-20 flex flex-col items-center justify-center text-slate-500 text-center">
@@ -317,7 +316,7 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                 <div className="space-y-6">
                                     {STAT_NAMES.map(stat => {
                                         const total = calcStat(stat, member.pokemon!.baseStats[stat], 31, member.evs[stat], member.nature);
-                                        const percentage = Math.min((total / 500) * 100, 100); // Visual bar width
+                                        const percentage = Math.min((total / 500) * 100, 100); 
                                         return (
                                             <div key={stat} className="group">
                                                 <div className="flex justify-between items-end mb-1">
@@ -327,9 +326,7 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                                 <div className="grid grid-cols-12 gap-4 items-center">
                                                     <div className="col-span-2 text-xs font-mono text-slate-600 text-right">{member.pokemon!.baseStats[stat]}</div>
                                                     <div className="col-span-8 relative h-6 flex items-center">
-                                                        {/* Track */}
                                                         <div className="absolute w-full h-1.5 bg-slate-800 rounded-full"></div>
-                                                        {/* Fill Bar */}
                                                         <div className="absolute h-1.5 bg-cyan-900/50 rounded-full transition-all duration-300" style={{ width: `${percentage}%` }}></div>
                                                         <input 
                                                             type="range" 
@@ -340,7 +337,6 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                                             onChange={(e) => updateEV(stat, parseInt(e.target.value))} 
                                                             className="slider-thumb w-full h-1.5 opacity-0 cursor-pointer relative z-10" 
                                                         />
-                                                        {/* Custom Thumb Visual (Since native styling is inconsistent) */}
                                                         <div 
                                                             className="pointer-events-none absolute w-4 h-4 bg-cyan-400 rounded-full shadow-[0_0_10px_cyan] transition-all duration-75"
                                                             style={{ left: `calc(${member.evs[stat] / 2.52}% - 8px)` }}

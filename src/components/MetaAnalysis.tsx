@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { RefreshCw, Zap, ExternalLink, TrendingUp, BarChart3 } from 'lucide-react';
+import { RefreshCw, Zap, ExternalLink, TrendingUp } from 'lucide-react'; // Removed BarChart3
 import { NewsService } from '../services/news';
 import { NewsItem } from '../types';
-import { COMMON_MONS } from '../data/constants';
+// Removed COMMON_MONS import
 
-// Simulated Usage Stats Data for the Graph
-// In a full backend app, this would come from parsing Smogon's monthly txt files.
 const USAGE_STATS = [
     { name: "Great Tusk", usage: 48.5, rank: 1, change: 0 },
     { name: "Kingambit", usage: 42.1, rank: 2, change: 1 },
@@ -23,7 +21,6 @@ export default function MetaAnalysis() {
 
     const fetchNews = async () => {
         setLoading(true);
-        // Add artificial delay so the user sees the "Syncing" state feel real
         const [data] = await Promise.all([
             NewsService.fetchLatestNews(),
             new Promise(resolve => setTimeout(resolve, 800)) 
@@ -64,7 +61,7 @@ export default function MetaAnalysis() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                {/* 1. Usage Stats Graph (Restored) */}
+                {/* 1. Usage Stats Graph */}
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-slate-900/50 border border-slate-700 rounded-xl p-6">
                         <h3 className="text-sm font-bold text-slate-300 uppercase tracking-wider mb-6 flex items-center gap-2">
@@ -90,7 +87,7 @@ export default function MetaAnalysis() {
                         </div>
                     </div>
                     
-                    {/* Archetype Distribution (Visual) */}
+                    {/* Archetype Distribution */}
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                         <div className="bg-slate-800 p-4 rounded-lg border border-slate-700 text-center">
                             <div className="text-2xl font-black text-white">41%</div>
@@ -128,6 +125,7 @@ export default function MetaAnalysis() {
                                                 {n.title} <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 mt-1" />
                                             </div>
                                             <div className="text-[10px] text-slate-500 mt-1">{n.pubDate} • {n.contentSnippet}</div>
+                                            {n.source && <div className="text-[10px] text-cyan-500/50 uppercase font-bold mt-0.5">{n.source}</div>}
                                         </a>
                                     </div>
                                 ))
