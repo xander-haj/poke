@@ -178,8 +178,9 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                     </div>
                                     <div className="text-[10px] text-slate-400 mb-auto truncate">{capitalize(m.item) || 'No Item'}</div>
                                     <div className="flex gap-1 h-1.5 mt-2">
-                                        {m.moves.map((mv, k) => (
-                                            <div key={k} className="flex-1 rounded-full bg-slate-700/50 overflow-hidden" title={mv?.type}>
+                                        {/* FIX: Renamed k to moveIdx and used it explicitly */}
+                                        {m.moves.map((mv, moveIdx) => (
+                                            <div key={moveIdx} className="flex-1 rounded-full bg-slate-700/50 overflow-hidden" title={mv?.type}>
                                                 {mv && <div className="h-full bg-cyan-500 shadow-[0_0_5px_cyan]"></div>}
                                             </div>
                                         ))}
