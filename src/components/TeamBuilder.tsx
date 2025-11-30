@@ -74,7 +74,7 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
          }
          
          const moveData = await PokeService.fetchMove(moveName);
-         // Explicitly typing the array to satisfy the MoveData type requirement and ensure consistency
+         // Explicitly typing the array to satisfy the MoveData type requirement
          const newMoves = [...currentMember.moves] as [MoveData | null, MoveData | null, MoveData | null, MoveData | null];
          newMoves[moveIndex] = moveData;
          updateMember(slotIndex, { moves: newMoves });
@@ -98,24 +98,23 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
     };
 
     return (
-        <div className={`flex w-full h-full relative transition-all duration-1000 ${backgroundClass} bg-size-200`}>
+        <div className={`flex w-full h-full relative transition-all duration-1000 ${backgroundClass} bg-size-200 overflow-hidden`}>
              {/* Overlay for readability if gradient is active */}
-             <div className="absolute inset-0 bg-slate-950/40 pointer-events-none"></div>
+             <div className="absolute inset-0 bg-slate-950/40 pointer-events-none z-0"></div>
 
             {/* --- MIDDLE COLUMN: TEAM LIST --- */}
-            <div className="flex-1 z-10 overflow-y-auto p-4 md:p-8 flex flex-col gap-4 max-w-4xl mx-auto">
+            {/* Added pb-24 to ensure the last card isn't cut off by the screen edge */}
+            <div className="flex-1 z-10 overflow-y-auto h-full p-4 md:p-8 flex flex-col gap-4 max-w-4xl mx-auto scroll-smooth pb-24">
                 {team.map((m, i) => {
                     const isSelected = i === selectedSlot;
                     const typeColor = m.pokemon ? TYPE_COLORS[m.pokemon.types[0]] : '#334155';
-                    // Used to provide a secondary border or accent if needed, currently unused but available for styling
-                    // const secondaryColor = m.pokemon?.types[1] ? TYPE_COLORS[m.pokemon.types[1]] : typeColor;
 
                     if (!m.pokemon) {
                         return (
                             <div 
                                 key={m.id}
                                 onClick={() => setSelectedSlot(i)}
-                                className={`h-32 border-2 border-dashed rounded-xl flex items-center justify-center cursor-pointer transition-all ${isSelected ? 'border-cyan-500 bg-slate-900/80' : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/50'}`}
+                                className={`h-32 border-2 border-dashed rounded-xl flex items-center justify-center cursor-pointer transition-all flex-shrink-0 ${isSelected ? 'border-cyan-500 bg-slate-900/80' : 'border-slate-700 bg-slate-900/50 hover:bg-slate-800/50'}`}
                             >
                                 <div className="text-center">
                                     <div className="text-xl font-bold text-slate-500 mb-1">Empty Slot {i + 1}</div>
@@ -129,7 +128,7 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                         <div 
                             key={m.id}
                             onClick={() => setSelectedSlot(i)}
-                            className={`relative h-36 rounded-xl border-l-4 overflow-hidden cursor-pointer transition-all duration-300 group shadow-lg flex ${isSelected ? 'bg-slate-900 ring-1 ring-white/20 translate-x-2' : 'bg-slate-900/60 hover:bg-slate-900 hover:translate-x-1'}`}
+                            className={`relative h-36 rounded-xl border-l-4 overflow-hidden cursor-pointer transition-all duration-300 group shadow-lg flex flex-shrink-0 ${isSelected ? 'bg-slate-900 ring-1 ring-white/20 translate-x-2' : 'bg-slate-900/60 hover:bg-slate-900 hover:translate-x-1'}`}
                             style={{ borderLeftColor: typeColor }}
                         >
                             {/* Card Content Grid */}
@@ -203,7 +202,8 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
             </div>
 
             {/* --- RIGHT COLUMN: ANALYSIS & CONFIG --- */}
-            <div className="w-80 z-20 bg-slate-900/95 backdrop-blur-md border-l border-slate-800 shadow-2xl flex flex-col">
+            {/* Added overflow-y-auto and h-full to prevent this column from being cut off */}
+            <div className="w-80 z-20 bg-slate-900/95 backdrop-blur-md border-l border-slate-800 shadow-2xl flex flex-col h-full overflow-y-auto pb-10">
                 <TeamAnalysis 
                     team={team}
                     selectedMember={member}

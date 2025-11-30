@@ -57,7 +57,7 @@ export default function TeamAnalysis({
     let currentAngle = 0;
 
     return (
-        <div className="h-full flex flex-col space-y-8 p-1">
+        <div className="flex flex-col space-y-8 p-4">
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
                 <h2 className="text-lg font-bold text-white">Team Analysis & Config</h2>
             </div>
