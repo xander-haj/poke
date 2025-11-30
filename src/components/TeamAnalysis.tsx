@@ -22,39 +22,31 @@ export default function TeamAnalysis({
 }: TeamAnalysisProps) {
     const types = Object.keys(TYPE_CHART);
 
-    // --- LOGIC: Team Coverage ---
-    const calculateCoverage = (defensiveType: string) => {
-        let coverageCount = 0;
+    // --- LOGIC: Offensive Coverage Grid ---
+    // Returns a list of Pokemon sprites that hit this type Super Effectively
+    const getCoverageSprites = (targetType: string) => {
+        const coveringMons: string[] = [];
+        
         team.forEach(member => {
             if (!member.pokemon) return;
-            const hasMove = member.moves.some(move => {
+            
+            // Check if any move is Super Effective against targetType
+            const hasCoverage = member.moves.some(move => {
                 if (!move || move.category === 'status') return false;
-                return TYPE_CHART[defensiveType]?.weak.includes(move.type);
+                // If the target type is in the move type's 'weak' list (meaning move type is strong against it)
+                // Wait, TYPE_CHART[type].weak means "What is THIS type weak to?"
+                // So if we have a Fire Move, we check TYPE_CHART[targetType].weak includes 'fire'.
+                return TYPE_CHART[targetType]?.weak.includes(move.type);
             });
-            if (hasMove) coverageCount++;
-        });
-        return coverageCount;
-    };
 
-    // --- LOGIC: Synergy Donut Data ---
-    const getTeamTypeDistribution = () => {
-        const dist: Record<string, number> = {};
-        let total = 0;
-        team.forEach(m => {
-            if(m.pokemon) {
-                m.pokemon.types.forEach(t => {
-                    dist[t] = (dist[t] || 0) + 1;
-                    total++;
-                });
+            if (hasCoverage) {
+                coveringMons.push(member.pokemon.sprite);
             }
         });
-        return { dist, total };
+        
+        // Remove duplicates if same pokemon covers multiple ways (unlikely with this logic but good practice)
+        return [...new Set(coveringMons)];
     };
-
-    const { dist: typeDist, total: totalTypes } = getTeamTypeDistribution();
-    
-    // SVG Donut Logic
-    let currentAngle = 0;
 
     return (
         <div className="flex flex-col space-y-8 p-4">
@@ -62,53 +54,38 @@ export default function TeamAnalysis({
                 <h2 className="text-lg font-bold text-white">Team Analysis & Config</h2>
             </div>
 
-            {/* 1. Global Team Synergy (Donut) */}
-            <div className="flex flex-col items-center">
-                <h3 className="text-xs font-bold text-slate-400 mb-4 uppercase tracking-wider">Type Synergy</h3>
-                <div className="relative w-40 h-40">
-                    <svg viewBox="0 0 42 42" className="w-full h-full transform -rotate-90">
-                        <circle cx="21" cy="21" r="15.9155" fill="transparent" stroke="#1e293b" strokeWidth="6" />
-                        {Object.entries(typeDist).map(([type, count]) => {
-                            const percentage = (count / totalTypes) * 100;
-                            const offset = 100 - currentAngle;
-                            currentAngle += percentage;
-                            return (
-                                <circle
-                                    key={type}
-                                    cx="21" cy="21" r="15.9155"
-                                    fill="transparent"
-                                    stroke={TYPE_COLORS[type]}
-                                    strokeWidth="6"
-                                    strokeDasharray={`${percentage} ${100 - percentage}`}
-                                    strokeDashoffset={offset}
-                                    className="transition-all duration-500 hover:opacity-80"
-                                />
-                            );
-                        })}
-                        {totalTypes === 0 && <text x="21" y="21" fill="#475569" textAnchor="middle" dy="0.3em" className="text-[3px] font-bold rotate-90">EMPTY</text>}
-                    </svg>
-                    {totalTypes > 0 && (
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                            <span className="text-xs font-bold text-slate-300">Synergy</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* 2. Global Coverage Grid */}
+            {/* 1. Global Coverage Grid (Replaced) */}
             <div>
-                <h3 className="text-xs font-bold text-slate-400 mb-3 text-center uppercase tracking-wider">Coverage</h3>
-                <div className="grid grid-cols-5 gap-1.5">
+                <h3 className="text-xs font-bold text-slate-400 mb-3 text-center uppercase tracking-wider">Offensive Coverage</h3>
+                <div className="grid grid-cols-1 gap-1">
                     {types.map(type => {
-                        const count = calculateCoverage(type);
-                        const opacity = count === 0 ? 'opacity-30 grayscale' : 'opacity-100';
+                        const sprites = getCoverageSprites(type);
+                        const isCovered = sprites.length > 0;
+                        
                         return (
-                            <div key={type} className={`flex flex-col items-center p-1 rounded bg-slate-800/50 border border-slate-700 ${opacity}`}>
-                                <div className="text-[9px] font-bold text-white uppercase px-1 rounded w-full text-center" style={{ backgroundColor: TYPE_COLORS[type] }}>
+                            <div key={type} className="flex items-center h-8 bg-slate-900/50 rounded border border-slate-800 overflow-hidden">
+                                {/* Type Label */}
+                                <div 
+                                    className="w-12 h-full flex items-center justify-center text-[9px] font-bold text-white uppercase flex-shrink-0" 
+                                    style={{ backgroundColor: TYPE_COLORS[type] }}
+                                >
                                     {type.substring(0, 3)}
                                 </div>
-                                <div className="text-[10px] font-mono mt-0.5 text-slate-300">
-                                    {count > 0 ? `${count * 10}%` : '0%'}
+                                
+                                {/* Covered By Icons */}
+                                <div className="flex-1 flex items-center px-2 gap-1 overflow-x-auto no-scrollbar">
+                                    {isCovered ? (
+                                        sprites.map((s, i) => (
+                                            <img key={i} src={s} className="w-6 h-6 object-contain" title="Covers this type" />
+                                        ))
+                                    ) : (
+                                        <span className="text-[9px] text-slate-600 italic">No coverage</span>
+                                    )}
+                                </div>
+
+                                {/* Count Badge */}
+                                <div className={`px-2 text-[10px] font-mono font-bold ${isCovered ? 'text-green-400' : 'text-red-500/50'}`}>
+                                    {sprites.length}
                                 </div>
                             </div>
                         );
@@ -118,7 +95,7 @@ export default function TeamAnalysis({
 
             <div className="border-t border-slate-800 my-4"></div>
 
-            {/* 3. Individual Editor (Radar & Config) */}
+            {/* 2. Individual Editor */}
             {selectedMember && selectedMember.pokemon ? (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     <div className="flex items-center justify-between">
@@ -132,8 +109,10 @@ export default function TeamAnalysis({
                     </div>
 
                     <StatRadar 
-                        stats={selectedMember.pokemon.baseStats} 
+                        baseStats={selectedMember.pokemon.baseStats} 
                         evs={selectedMember.evs}
+                        ivs={selectedMember.ivs}
+                        nature={selectedMember.nature}
                         color={TYPE_COLORS[selectedMember.pokemon.types[0]]} 
                     />
 

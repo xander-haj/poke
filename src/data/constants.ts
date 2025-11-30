@@ -41,7 +41,6 @@ export const TYPE_COLORS: Record<string, string> = {
     dark: '#705746', fairy: '#D685AD'
 };
 
-// Gradients for the animated background
 export const TYPE_GRADIENTS: Record<string, string> = {
     normal: 'from-slate-800 to-slate-600',
     fire: 'from-orange-900/80 to-red-900/80',
@@ -79,17 +78,16 @@ export const ABILITY_IMMUNITIES: Record<string, string[]> = {
 };
 
 export const COMMON_MONS = [
+    "great-tusk", "kingambit", "gholdengo", "iron-valiant", "walking-wake", 
+    "iron-treads", "pelipper", "barraskewda", "zapdos", "glimmora", 
+    "volcarona", "alomomola", "blissey", "dondozo", "gliscor", "clefable", 
+    "corviknight", "archaludon", "roaring-moon", "iron-moth", "hatterene", 
+    "zamazenta-crowned", "dragapult", "rillaboom", "ogerpon-wellspring", 
+    "ting-lu", "toxapex", "slowking-galar", "skeledirge", "garganacl", 
+    "samurott-hisui", "sneasler", "enamorus", "baxcalibur", "meowscarada", 
+    "ceruledge", "dragapult", "amoonguss", "heatran", "landorus-therian",
     "pikachu", "charizard", "bulbasaur", "squirtle", "gengar", "dragonite", "mewtwo", 
-    "lucario", "greninja", "landorus-therian", "great-tusk", "kingambit", "gholdengo", 
-    "iron-valiant", "walking-wake", "iron-treads", "pelipper", "barraskewda", "zapdos", 
-    "glimmora", "volcarona", "alomomola", "blissey", "dondozo", "gliscor", "clefable", 
-    "corviknight", "archaludon", "roaring-moon", "iron-moth", "hatterene", "zamazenta-crowned", 
-    "dragapult", "rillaboom", "ogerpon-wellspring", "ting-lu", "toxapex", "slowking-galar",
-    "skeledirge", "garganacl", "samurott-hisui", "decidueye-hisui", "typhlosion-hisui",
-    "sneasler", "enamorus", "ursaluna", "baxcalibur", "meowscarada", "quaquaval",
-    "ceruledge", "armarouge", "tinkaton", "annihilape", "clodsire", "iron-hands",
-    "iron-jugulis", "iron-thorns", "iron-bundle", "flutter-mane", "scream-tail",
-    "brute-bonnet", "slither-wing", "sandy-shocks", "chi-yu", "chien-pao", "wo-chien"
+    "lucario", "greninja"
 ];
 
 export const COMPETITIVE_ITEMS = {
@@ -97,8 +95,34 @@ export const COMPETITIVE_ITEMS = {
     "Health Recovery": ["leftovers", "black-sludge", "shell-bell"],
     "Damage Boosting": ["life-orb", "expert-belt", "muscle-band", "wise-glasses"],
     "Defensive": ["rocky-helmet", "heavy-duty-boots", "assault-vest", "eviolite"],
-    "Consumables": ["focus-sash", "white-herb", "power-herb", "mental-herb"],
+    "Consumables": ["focus-sash", "white-herb", "power-herb", "mental-herb", "booster-energy"],
     "Berries": ["sitrus-berry", "lum-berry", "salac-berry", "liechi-berry", "petaya-berry"],
     "Terrain/Weather": ["light-clay", "damp-rock", "heat-rock", "smooth-rock", "icy-rock", "electric-seed", "grassy-seed", "misty-seed", "psychic-seed"],
     "Status": ["flame-orb", "toxic-orb", "lagging-tail", "iron-ball"]
 };
+
+// Hand-picked meta movesets for popular mons to prevent "legal but garbage" defaults
+export const COMPETITIVE_MOVES: Record<string, string[]> = {
+    "great-tusk": ["headlong-rush", "close-combat", "ice-spinner", "rapid-spin"],
+    "kingambit": ["kowtow-cleave", "sucker-punch", "iron-head", "swords-dance"],
+    "gholdengo": ["make-it-rain", "shadow-ball", "nasty-plot", "recover"],
+    "iron-valiant": ["moonblast", "close-combat", "booster-energy", "calm-mind"],
+    "walking-wake": ["hydro-steam", "draco-meteor", "flamethrower", "flip-turn"],
+    "glimmora": ["stealth-rock", "mortal-spin", "earth-power", "power-gem"],
+    "volcarona": ["quiver-dance", "fiery-dance", "bug-buzz", "morning-sun"],
+    "dragapult": ["shadow-ball", "draco-meteor", "u-turn", "flamethrower"],
+    "landorus-therian": ["earthquake", "u-turn", "stealth-rock", "stone-edge"],
+    "samurott-hisui": ["ceaseless-edge", "razor-shell", "sacred-sword", "aqua-jet"],
+    "ribombee": ["sticky-web", "moonblast", "stun-spore", "u-turn"],
+    "toxapex": ["recover", "toxic", "scald", "haze"]
+};
+
+// High priority moves if not in the specific list
+export const PRIORITY_MOVES = [
+    "stealth-rock", "spikes", "sticky-web", "defog", "rapid-spin", "mortal-spin",
+    "recover", "roost", "slack-off", "soft-boiled", "moonlight", "morning-sun", "synthesis",
+    "swords-dance", "nasty-plot", "calm-mind", "dragon-dance", "quiver-dance", "bulk-up", "coil",
+    "will-o-wisp", "thunder-wave", "toxic", "glare", "spore", "yawn",
+    "u-turn", "volt-switch", "flip-turn", "parting-shot",
+    "knock-off", "earthquake", "scald", "ice-beam", "thunderbolt", "flamethrower", "surf", "close-combat", "moonblast"
+];

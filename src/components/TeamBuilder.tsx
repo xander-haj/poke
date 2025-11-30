@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Search, ChevronRight, X } from 'lucide-react';
 import { TeamMember, MoveData } from '../types';
-import { COMMON_MONS, TYPE_COLORS, TYPE_GRADIENTS } from '../data/constants';
+import { COMMON_MONS, TYPE_COLORS, TYPE_GRADIENTS, COMPETITIVE_MOVES, PRIORITY_MOVES } from '../data/constants';
 import { capitalize } from '../utils/calc';
 import { PokeService } from '../services/pokeapi';
 import TeamAnalysis from './TeamAnalysis';
@@ -38,13 +38,42 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
     const fetchPokemon = async (name: string) => {
         try {
             const newMon = await PokeService.fetchPokemon(name);
+            
+            // --- MOVESET OPTIMIZATION LOGIC ---
+            // 1. Check for hardcoded competitive moveset
+            let recommendedMoves = COMPETITIVE_MOVES[name.toLowerCase()];
+            
+            // 2. If no hardcoded set, apply heuristic filter
+            if (!recommendedMoves) {
+                // Heuristic: Pick moves that are in PRIORITY_MOVES list
+                recommendedMoves = newMon.moves.filter(mName => {
+                    const isPriority = PRIORITY_MOVES.includes(mName);
+                    return isPriority;
+                }).slice(0, 4);
+            }
+
+            // 3. Fallback: If still not 4 moves, just take the first 4 available (better than empty)
+            if (!recommendedMoves || recommendedMoves.length < 4) {
+                 const remaining = newMon.moves.filter(m => !recommendedMoves?.includes(m));
+                 recommendedMoves = [...(recommendedMoves || []), ...remaining].slice(0, 4);
+            }
+
+            // 4. Fetch the data for these selected moves
+            const resolvedMoves = await Promise.all(
+                recommendedMoves.map(m => PokeService.fetchMove(m))
+            );
+            
+            // Pad to ensure 4 slots
+            const finalMoves: [MoveData | null, MoveData | null, MoveData | null, MoveData | null] = [null, null, null, null];
+            resolvedMoves.forEach((m, i) => { if (i < 4) finalMoves[i] = m; });
+
             updateMember(selectedSlot, {
                 pokemon: newMon,
                 ability: newMon.abilities[0],
                 teraType: newMon.types[0],
                 item: 'leftovers', // Default useful item
                 nature: 'Serious',
-                moves: [null, null, null, null],
+                moves: finalMoves,
                 evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }
             });
             setIsSearchOpen(false);
@@ -190,7 +219,14 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                                 </div>
                                             )}
                                             <datalist id={`moves-${m.id}`}>
-                                                {m.pokemon?.moves.sort().map(mv => <option key={mv} value={mv} />)}
+                                                {/* Smart sorting: Priority moves first */}
+                                                {m.pokemon?.moves.sort((a, b) => {
+                                                    const aP = PRIORITY_MOVES.includes(a);
+                                                    const bP = PRIORITY_MOVES.includes(b);
+                                                    if (aP && !bP) return -1;
+                                                    if (!aP && bP) return 1;
+                                                    return a.localeCompare(b);
+                                                }).map(mv => <option key={mv} value={mv} />)}
                                             </datalist>
                                         </div>
                                     ))}
