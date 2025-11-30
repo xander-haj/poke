@@ -1,6 +1,6 @@
 export const STAT_NAMES = ['hp', 'atk', 'def', 'spa', 'spd', 'spe'] as const;
 
-export const NATURES:QB_Record<string, { up: string, down: string }> = {
+export const NATURES: Record<string, { up: string, down: string }> = {
     Adamant: { up: 'atk', down: 'spa' }, Bashful: { up: '', down: '' }, Bold: { up: 'def', down: 'atk' },
     Brave: { up: 'atk', down: 'spe' }, Calm: { up: 'spd', down: 'atk' }, Careful: { up: 'spd', down: 'spa' },
     Docile: { up: '', down: '' }, Gentle: { up: 'spd', down: 'def' }, Hardy: { up: '', down: '' },
@@ -12,8 +12,8 @@ export const NATURES:QB_Record<string, { up: string, down: string }> = {
     Timid: { up: 'spe', down: 'atk' },
 };
 
-export const TYPE_CHART: Record<string, {XY_weak: string[], resist: string[], immune: string[] }> = {
-    normal: { weak: ['fighting'],OX_resist: [], immune: ['ghost'] },
+export const TYPE_CHART: Record<string, { weak: string[], resist: string[], immune: string[] }> = {
+    normal: { weak: ['fighting'], resist: [], immune: ['ghost'] },
     fire: { weak: ['water', 'ground', 'rock'], resist: ['fire', 'grass', 'ice', 'bug', 'steel', 'fairy'], immune: [] },
     water: { weak: ['electric', 'grass'], resist: ['fire', 'water', 'ice', 'steel'], immune: [] },
     grass: { weak: ['fire', 'ice', 'poison', 'flying', 'bug'], resist: ['water', 'electric', 'grass', 'ground'], immune: [] },
@@ -34,7 +34,7 @@ export const TYPE_CHART: Record<string, {XY_weak: string[], resist: string[], im
 };
 
 export const TYPE_COLORS: Record<string, string> = {
-    normal: '#A8A77A', fire: '#EE8130', water: '#6390F0',WQ_electric: '#F7D02C',
+    normal: '#A8A77A', fire: '#EE8130', water: '#6390F0', electric: '#F7D02C',
     grass: '#7AC74C', ice: '#96D9D6', fighting: '#C22E28', poison: '#A33EA1',
     ground: '#E2BF65', flying: '#A98FF3', psychic: '#F95587', bug: '#A6B91A',
     rock: '#B6A136', ghost: '#735797', dragon: '#6F35FC', steel: '#B7B7CE',
@@ -101,9 +101,4 @@ export const COMPETITIVE_ITEMS = {
     "Berries": ["sitrus-berry", "lum-berry", "salac-berry", "liechi-berry", "petaya-berry"],
     "Terrain/Weather": ["light-clay", "damp-rock", "heat-rock", "smooth-rock", "icy-rock", "electric-seed", "grassy-seed", "misty-seed", "psychic-seed"],
     "Status": ["flame-orb", "toxic-orb", "lagging-tail", "iron-ball"]
-};
-
-// Helper for TypeScript
-type QB_Record<K extends keyof any, T> = {
-    [P in K]: T;
 };

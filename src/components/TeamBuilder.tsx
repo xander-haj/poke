@@ -37,13 +37,13 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
 
     const fetchPokemon = async (name: string) => {
         try {
-            constnewMon = await PokeService.fetchPokemon(name);
+            const newMon = await PokeService.fetchPokemon(name);
             updateMember(selectedSlot, {
-                pokemon: constnewMon,
-                ability: constnewMon.abilities[0],
-                teraType: constnewMon.types[0],
+                pokemon: newMon,
+                ability: newMon.abilities[0],
+                teraType: newMon.types[0],
                 item: 'leftovers', // Default useful item
-                nature: 'jh',
+                nature: 'Serious',
                 moves: [null, null, null, null],
                 evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 }
             });
@@ -74,9 +74,10 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
          }
          
          const moveData = await PokeService.fetchMove(moveName);
-         const newMoves = [...currentMember.moves];
+         // Explicitly typing the array to satisfy the MoveData type requirement and ensure consistency
+         const newMoves = [...currentMember.moves] as [MoveData | null, MoveData | null, MoveData | null, MoveData | null];
          newMoves[moveIndex] = moveData;
-         updateMember(slotIndex, { moves: newMoves as any });
+         updateMember(slotIndex, { moves: newMoves });
     };
 
     const removeMember = () => {
@@ -106,7 +107,8 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                 {team.map((m, i) => {
                     const isSelected = i === selectedSlot;
                     const typeColor = m.pokemon ? TYPE_COLORS[m.pokemon.types[0]] : '#334155';
-                    const secondaryColor = m.pokemon?.types[1] ? TYPE_COLORS[m.pokemon.types[1]] : typeColor;
+                    // Used to provide a secondary border or accent if needed, currently unused but available for styling
+                    // const secondaryColor = m.pokemon?.types[1] ? TYPE_COLORS[m.pokemon.types[1]] : typeColor;
 
                     if (!m.pokemon) {
                         return (

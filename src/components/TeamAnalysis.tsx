@@ -1,8 +1,8 @@
 import { TeamMember } from '../types';
-import { TYPE_CHART, TYPE_COLORS, ABILITY_IMMUNITIES } from '../data/constants';
+import { TYPE_CHART, TYPE_COLORS } from '../data/constants';
 import StatRadar from './StatRadar';
 import ItemSelector from './ItemSelector';
-import { Search, ChevronRight, Copy, Trash2 } from 'lucide-react';
+import { Search, ChevronRight, Trash2 } from 'lucide-react';
 import { capitalize } from '../utils/calc';
 
 interface TeamAnalysisProps {
@@ -55,8 +55,6 @@ export default function TeamAnalysis({
     
     // SVG Donut Logic
     let currentAngle = 0;
-    const donutRadius = 15.9155;
-    const donutCircumference = 100;
 
     return (
         <div className="h-full flex flex-col space-y-8 p-1">
