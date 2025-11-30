@@ -114,7 +114,13 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
             text += `${name}${item}\n`;
             text += `Ability: ${capitalize(m.ability)}\n`;
             text += `Tera Type: ${capitalize(m.teraType)}\n`;
-            const evs = Object.entries(m.evs).filter(([k, v]) => v > 0).map(([k, v]) => `${v} ${k}`).join(' / ');
+            
+            // Fix: Properly filter entries by value > 0, ignoring the key in the filter step
+            const evs = Object.entries(m.evs)
+                .filter(([, v]) => v > 0)
+                .map(([k, v]) => `${v} ${k}`)
+                .join(' / ');
+            
             if (evs) text += `EVs: ${evs}\n`;
             text += `${m.nature} Nature\n`;
             m.moves.forEach(move => { if (move) text += `- ${capitalize(move.name)}\n` });
@@ -178,7 +184,6 @@ export default function TeamBuilder({ team, setTeam, selectedSlot, setSelectedSl
                                     </div>
                                     <div className="text-[10px] text-slate-400 mb-auto truncate">{capitalize(m.item) || 'No Item'}</div>
                                     <div className="flex gap-1 h-1.5 mt-2">
-                                        {/* FIX: Renamed k to moveIdx and used it explicitly */}
                                         {m.moves.map((mv, moveIdx) => (
                                             <div key={moveIdx} className="flex-1 rounded-full bg-slate-700/50 overflow-hidden" title={mv?.type}>
                                                 {mv && <div className="h-full bg-cyan-500 shadow-[0_0_5px_cyan]"></div>}

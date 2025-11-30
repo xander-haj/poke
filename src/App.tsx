@@ -9,7 +9,6 @@ function App() {
     const [view, setView] = useState('builder');
     const [selectedSlot, setSelectedSlot] = useState(0);
 
-    // FIX: Initialize moves with 'null' (MoveData | null), not empty strings
     const [team, setTeam] = useState<TeamMember[]>(
         Array(6).fill(null).map(() => ({
             id: Math.random().toString(36),
@@ -18,7 +17,7 @@ function App() {
             item: '',
             ability: '',
             nature: 'Serious',
-            moves: [null, null, null, null], // Corrected Type
+            moves: [null, null, null, null],
             evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
             ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
             teraType: 'normal',
@@ -28,12 +27,11 @@ function App() {
 
     const handleAutoForgeComplete = (newTeam: TeamMember[]) => {
         const fullTeam = [...newTeam];
-        // FIX: Ensure padding slots also use correct null types for moves
         while (fullTeam.length < 6) {
              fullTeam.push({
                 id: Math.random().toString(36),
                 pokemon: null, nickname: '', item: '', ability: '', nature: 'Serious',
-                moves: [null, null, null, null], // Corrected Type
+                moves: [null, null, null, null],
                 evs: { hp: 0, atk: 0, def: 0, spa: 0, spd: 0, spe: 0 },
                 ivs: { hp: 31, atk: 31, def: 31, spa: 31, spd: 31, spe: 31 },
                 teraType: 'normal',

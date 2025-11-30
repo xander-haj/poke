@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { RefreshCw, Zap, ExternalLink, TrendingUp } from 'lucide-react'; // Removed BarChart3
+import { RefreshCw, Zap, ExternalLink, TrendingUp } from 'lucide-react';
 import { NewsService } from '../services/news';
 import { NewsItem } from '../types';
-// Removed COMMON_MONS import
 
 const USAGE_STATS = [
     { name: "Great Tusk", usage: 48.5, rank: 1, change: 0 },
